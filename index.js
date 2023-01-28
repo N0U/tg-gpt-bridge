@@ -46,4 +46,23 @@ bot.on('message', async (ctx) => {
   ctx.reply(`Tokens: ${usage.total_tokens}`);
 });
 
-bot.launch();
+if(process.env.PROD) {
+  console.log('Launch in prod mode');
+  bot.launch({
+    webhook: {
+      domain: process.env.URL,
+      port: Number(process.env.PORT),
+    }
+  })
+} else {
+  console.log('Launch in dev mode');
+  bot.launch();
+}
+
+// Enable graceful stop
+process.once('SIGINT', () => {
+  bot.stop('SIGINT');
+ });
+process.once('SIGTERM', () => {
+  bot.stop('SIGTERM');
+});
