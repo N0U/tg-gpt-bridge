@@ -30,6 +30,7 @@ bot.on('message', async (ctx) => {
     return;
   }
   ctx.sendChatAction('typing');
+  console.log(`Request: ${text}`);
 
   const response = await openAi.createCompletion({
       prompt: text,
@@ -42,6 +43,8 @@ bot.on('message', async (ctx) => {
   const { choices, usage } = response.data;
   const { text: answer } = choices[0];
 
+  console.log(`Response (${usage.total_tokens}): ${answer}`);
+  
   await ctx.reply(answer);
   ctx.reply(`Tokens: ${usage.total_tokens}`);
 });
